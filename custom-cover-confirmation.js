@@ -1,7 +1,5 @@
-// Add this to your lovelace resources as
-// url: /local/custom-cover-confirmation.js
-// type: module
-
+// 1. Copy this file in the folder $HA_CONFIG/www 
+// 2. Add this resources to your lovelace in Settings->Dashboards>Resources and put /local/custom-cover-confirmation.js as url.
 
 // Load card helpers
 async function _loadCardHelpers() {
@@ -23,7 +21,7 @@ function displayMessage(message, handler) {
 function onOpenTap2(ev) {
   displayMessage("Open", () => {
     ev.stopPropagation();
-    this.entityObj.openCover();
+    this.hass.callService("cover", "open_cover", {entity_id: this.stateObj.entity_id,});
   });
 }
 
@@ -31,7 +29,7 @@ function onOpenTap2(ev) {
 function onCloseTap2(ev) {
   displayMessage("Close", () => {
     ev.stopPropagation();
-    this.entityObj.closeCover();
+    this.hass.callService("cover", "close_cover", {entity_id: this.stateObj.entity_id,});
   });
 }
 
@@ -45,7 +43,7 @@ customElements.whenDefined('ha-cover-controls').then(() => {
   const HaCoverControls2 = customElements.get('ha-cover-controls');
 
   // Replace onOpenTap and onCloseTap in the base class
-  HaCoverControls2.prototype.onOpenTap = onOpenTap2;
-  HaCoverControls2.prototype.onCloseTap = onCloseTap2;
+  HaCoverControls2.prototype._onOpenTap = onOpenTap2;
+  HaCoverControls2.prototype._onCloseTap = onCloseTap2;
 });
 
